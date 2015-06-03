@@ -22,14 +22,15 @@ import com.sun.j3d.utils.behaviors.keyboard.KeyNavigatorBehavior;
 import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 
+
 /**
  * 
- * @author Luca Geatti
+ * @author Luca Geatti <geatti.luca@spes.uniud.it>
  *
  */
-public class Esempio5 extends Applet{
+public class Es4_5 extends Applet{
 	
-	public Esempio5(){
+	public Es4_5(){
 		setLayout(new BorderLayout());
 		GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
 		Canvas3D canvas = new Canvas3D(config);
@@ -56,10 +57,15 @@ public class Esempio5 extends Applet{
 	//BranchGroup
 	public BranchGroup createSceneGraph(){
 		BranchGroup branchG = new BranchGroup();
-		TransformGroup tg = createSubGraph();
-		branchG.addChild(tg);
+		TransformGroup tgEarth = createEarth(branchG);
+		branchG.addChild(tgEarth);
+		
 		//Aggiungo il behavior per la rotazione della terra
 		//addBehavior(branchG, tg);
+		
+		TransformGroup tgMoon = createMoon(branchG);
+		branchG.addChild(tgMoon);
+		
 		
 		//Modifico la luce
 		//ambientLight(branchG);
@@ -73,15 +79,50 @@ public class Esempio5 extends Applet{
 		return branchG;
 	}
 	
-	//TransformGroup
-	public TransformGroup createSubGraph(){
-		TransformGroup tg1 = new TransformGroup();
-		
+	//TransformGroup Earth
+	public TransformGroup createEarth(BranchGroup bg){
+		TransformGroup tgEarth = new TransformGroup();
+		//Setto le capability della terra
+		tgEarth.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		tgEarth.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+				
 		Earth earth = new Earth(1.0f);
-		tg1.addChild(earth);
+		tgEarth.addChild(earth);
 		
-		return tg1;
+		
+		return tgEarth;
 	}
+	
+	
+	
+	
+	//TransformGroup Moon
+	public TransformGroup createMoon(BranchGroup bg){
+		TransformGroup tgMoon = new TransformGroup();
+		//Setto le capability della luna
+		tgMoon.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+		tgMoon.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+		
+		Transform3D tM = new Transform3D();
+		tM.setTranslation(new Vector3f(-2.0f , 0.0f , 0.0f));
+		tgMoon.setTransform(tM);
+		
+		Moon moon = new Moon(0.3f);
+		tgMoon.addChild(moon);
+		
+		//Aggiungo il behavior per la luna
+		MoonRotation moonRot = new MoonRotation(tgMoon, 2.0f);
+		BoundingSphere bounds = new BoundingSphere(new Point3d() , 1000.0d);
+		moonRot.setSchedulingBounds(bounds);
+		
+		//Aggiungo il BEHAVIOR al BranchGraph
+		bg.addChild(moonRot);
+				
+		
+		return tgMoon;
+	}
+		
+		
 	
 	
 	
@@ -148,7 +189,7 @@ public class Esempio5 extends Applet{
 	//sul Content Branch.
 	public void changeViewTransform(SimpleUniverse simpleU){
 		Transform3D t2 = new Transform3D();
-		t2.lookAt(new Point3d(0.0d , 0.0d , 10.0d), new Point3d(0.0d,0.0d,0.0d), new Vector3d(0.0d,1.0d,0.0d));
+		t2.lookAt(new Point3d(0.0d , 0.0d , 15.0d), new Point3d(0.0d,0.0d,0.0d), new Vector3d(0.0d,1.0d,0.0d));
 		t2.invert();
 		
 		TransformGroup vtg = simpleU.getViewingPlatform().getViewPlatformTransform();
@@ -192,7 +233,7 @@ public class Esempio5 extends Applet{
 	
 	
 	public static void main(String[] args){
-		new MainFrame(new Esempio5(), 1024, 768);
+		new MainFrame(new Es4_5(), 1024, 768);
 	}
 	
 }

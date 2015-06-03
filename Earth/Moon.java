@@ -13,20 +13,20 @@ import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 
 /**
- * Classe per definire un oggetto che rappresenta il Pianeta Terra.
+ * Classe per definire un oggetto che rappresenta la Luna.
  * 
  * @author Luca Geatti <geatti.luca@spes.uniud.it>
  *
  */
-public class Earth extends Shape3D {
+public class Moon extends Shape3D {
 	
 	private TextureLoader loader;
 	private Appearance appear;
 
-	public Earth(float raggio) {
+	public Moon(float raggio) {
 		//Carico la texture
 		this.loader = new TextureLoader(
-					"/Users/luca/Documents/workspace/EserciziJava3D/bin/earth2.jpg",
+					"/Users/luca/Documents/workspace/EserciziJava3D/bin/moon.jpg",
 					new Container());
 		//Appearance
 		this.appear = new Appearance();
