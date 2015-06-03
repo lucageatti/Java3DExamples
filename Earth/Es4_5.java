@@ -57,12 +57,11 @@ public class Es4_5 extends Applet{
 	//BranchGroup
 	public BranchGroup createSceneGraph(){
 		BranchGroup branchG = new BranchGroup();
+		//Creo il Pianeta Terra
 		TransformGroup tgEarth = createEarth(branchG);
 		branchG.addChild(tgEarth);
 		
-		//Aggiungo il behavior per la rotazione della terra
-		//addBehavior(branchG, tg);
-		
+		//Aggiungo la Luna
 		TransformGroup tgMoon = createMoon(branchG);
 		branchG.addChild(tgMoon);
 		
@@ -71,13 +70,13 @@ public class Es4_5 extends Applet{
 		//ambientLight(branchG);
 		directionalLight(branchG);	
 		
-		//Aggiungo lo sfondo: l'oggetto background è di tipo Leaf, per cui posso
-		//aggiungerlo solo al BG che può avere più figli
+		//Aggiungo lo sfondo: 
 		Background back = addBackground();
 		branchG.addChild(back);
 		
 		return branchG;
 	}
+	
 	
 	//TransformGroup Earth
 	public TransformGroup createEarth(BranchGroup bg){
@@ -88,7 +87,6 @@ public class Es4_5 extends Applet{
 				
 		Earth earth = new Earth(1.0f);
 		tgEarth.addChild(earth);
-		
 		
 		return tgEarth;
 	}
@@ -104,20 +102,24 @@ public class Es4_5 extends Applet{
 		tgMoon.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
 		
 		Transform3D tM = new Transform3D();
-		tM.setTranslation(new Vector3f(-2.0f , 0.0f , 0.0f));
+		//Imposto la posizione iniziale della luna, PRIMA che la trasformazione inizi.
+		float xInit = (float) ( Math.sin(0.0f) );
+		float yInit = (float) ( Math.cos(0.0f) );
+		tM.setTranslation(new Vector3f(xInit , 0.0f , yInit));
 		tgMoon.setTransform(tM);
 		
+		//Creo la luna
 		Moon moon = new Moon(0.3f);
 		tgMoon.addChild(moon);
 		
-		//Aggiungo il behavior per la luna
+		//Aggiungo il behavior per la luna: il secondo parametro è il raggio
+		//di rivoluzione, cioè la distanza della luna dalla terra.
 		MoonRotation moonRot = new MoonRotation(tgMoon, 2.0f);
 		BoundingSphere bounds = new BoundingSphere(new Point3d() , 1000.0d);
 		moonRot.setSchedulingBounds(bounds);
 		
 		//Aggiungo il BEHAVIOR al BranchGraph
 		bg.addChild(moonRot);
-				
 		
 		return tgMoon;
 	}
@@ -144,24 +146,6 @@ public class Es4_5 extends Applet{
 		bg.addChild(nav);
 	}
 	
-	
-	
-	
-	/*
-	 * Aggiungo il behavior al BranchGroup del primo parametro, che fa riferimento al
-	 * TransformGroup del secondo parametro.
-	 */
-	private void addBehavior(BranchGroup bg, TransformGroup tg){
-		//Setto le capability della terra
-		tg.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-		
-		RotationBehavior rotation = new RotationBehavior(tg);
-		
-		BoundingSphere bounds = new BoundingSphere(new Point3d(0.0d,0.0d,0.0d), 1000.0d);
-		rotation.setSchedulingBounds(bounds);
-		
-		bg.addChild(rotation);
-	}
 	
 	
 	
